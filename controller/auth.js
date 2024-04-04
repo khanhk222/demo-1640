@@ -1,3 +1,4 @@
+const QAcoordinator = require('../models/QAcoordinator');
 const Account = require('../models/user');
 const bcrypt = require('bcryptjs');
 
@@ -15,7 +16,7 @@ exports.handleLogin = async (req, res) => {
     try {
         let user = await Account.findOne({ email: username });
         // console.log(user)
-        await bcrypt.compare(password, user.password).then((doMatch) => {
+        await bcrypt.compare(password, user.password).then(async (doMatch) => {
             if (doMatch) {
                 // console.log(user)
                 if (user.role == 'admin') {
