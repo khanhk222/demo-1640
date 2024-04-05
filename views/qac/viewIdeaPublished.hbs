@@ -64,7 +64,6 @@
                                     <tr>
                                         <th>Name</th>
                                         <th>URL</th>
-                                        <th>Actions</th> <!-- Add Actions column -->
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -72,13 +71,7 @@
                                     <tr>
                                         <td>{{this.name}}</td>
                                         <td>{{this.url}}</td>
-                                        <td>
-                                            <form action="/qac/publishIdea" method="POST"> <!-- Add a form for publishing idea -->
-                                                <input type="hidden" name="ideaID" value="{{this._id}}">
-                                                <button type="submit" class="btn btn-primary">Publish</button>
-                                            </form>
-                                        </td>
-                                    </tr>
+                                    </tr> 
                                     {{/each}}
                                 </tbody>
                             </table>
@@ -107,6 +100,5 @@
         </div>
     </div>
 </body>
-
 
 </html>

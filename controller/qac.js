@@ -229,6 +229,42 @@ exports.viewIdeaByFaculty = async (req, res) => {
     }
 }
 
+exports.selectIdeaToPublish = async (req, res) => {
+    const existedQAC = await QAC.find({ email: req.session.email });
+    if (req.session.email === undefined || existedQAC.length == 0) {
+        res.redirect('/');
+    } else {
+        const facultyID = existedQAC[0].faculty;
+        const ideaID = req.body.ideaID;
+        const ideas = await idea.findByIdAndUpdate({_id: ideaID, facultyID: facultyID}, {approve: true});
+        res.redirect('/qac/viewIdeaByFaculty');
+    }
+}
+
+exports.viewIdeaPublished = async (req, res) => {
+    const existedQAC = await QAC.find({ email: req.session.email });
+    if (req.session.email === undefined || existedQAC.length == 0) {
+        res.redirect('/');
+    } else {
+        const facultyID = existedQAC[0].faculty;
+        const page = req.query.page || 1;
+        const perPage = 5;
+        const totalIdeas = await idea.countDocuments({ approve: true, facultyID: facultyID });
+        const ideas = await idea.find({ approve: true, facultyID: facultyID })
+            .skip((perPage * page) - perPage)
+            .limit(perPage)
+            .exec();
+        const paginateIdeas = paginate(ideas, totalIdeas, perPage, page);
+        res.render('qac/viewIdeaPublished', {
+            ideas: paginateIdeas.docs, currentPage: paginateIdeas.currentPage,
+            hasNextPage: paginateIdeas.hasNextPage, hasPreviousPage: paginateIdeas.hasPreviousPage,
+            nextPage: paginateIdeas.nextPage, previousPage: paginateIdeas.previousPage,
+            totalItems: totalIdeas, totalPages: paginateIdeas.totalPages,
+            loginName: req.session.email
+        });
+    }
+}
+
 const paginate = (items, totalItems, perPage, page) => {
     const totalPages = Math.ceil(totalItems / perPage);
     return {
@@ -243,4 +279,3 @@ const paginate = (items, totalItems, perPage, page) => {
         docs: items
     };
 }
-
