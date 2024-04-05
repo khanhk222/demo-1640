@@ -72,12 +72,16 @@
                                     <tr>
                                         <td>{{this.name}}</td>
                                         <td>{{this.url}}</td>
-                                        <td>
-                                            <form action="/qac/publishIdea" method="POST"> <!-- Add a form for publishing idea -->
-                                                <input type="hidden" name="ideaID" value="{{this._id}}">
-                                                <button type="submit" class="btn btn-primary">Publish</button>
-                                            </form>
-                                        </td>
+                                        {{#if this.approve}}
+                                            <td>Published</td>
+                                        {{else}}
+                                            <td>
+                                                <form action="/qac/publishIdea" method="POST"> <!-- Add a form for publishing idea -->
+                                                    <input type="hidden" name="ideaID" value="{{this._id}}">
+                                                    <button type="submit" class="btn btn-primary">Publish</button>
+                                                </form>
+                                            </td>
+                                        {{/if}}
                                     </tr>
                                     {{/each}}
                                 </tbody>
@@ -85,18 +89,18 @@
                             <nav aria-label="Page navigation">
                                 <ul class="pagination justify-content-center">
                                     {{#if hasPreviousPage}}
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page={{previousPage}}" aria-label="Previous">
-                                            <span aria-hidden="true">&laquo;</span>
-                                        </a>
-                                    </li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{previousPage}}" aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
                                     {{/if}}
                                     {{#if hasNextPage}}
-                                    <li class="page-item">
-                                        <a class="page-link" href="?page={{nextPage}}" aria-label="Next">
-                                            <span aria-hidden="true">&raquo;</span>
-                                        </a>
-                                    </li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{nextPage}}" aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
                                     {{/if}}
                                 </ul>
                             </nav>
