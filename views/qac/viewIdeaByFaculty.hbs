@@ -77,6 +77,24 @@
                                     {{/each}}
                                 </tbody>
                             </table>
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination justify-content-center">
+                                    {{#if hasPreviousPage}}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{previousPage}}" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                    {{/if}}
+                                    {{#if hasNextPage}}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{nextPage}}" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                    {{/if}}
+                                </ul>
+                            </nav>
                         </div>
                     </div>
                 </div>
@@ -84,4 +102,5 @@
         </div>
     </div>
 </body>
+
 </html>

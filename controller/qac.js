@@ -211,16 +211,36 @@ exports.viewIdeaByFaculty = async (req, res) => {
         res.redirect('/');
     } else {
         const facultyID = existedQAC[0].faculty;
-        console.log(facultyID);
-        const ideas = await idea.find({ facultyID: facultyID });
-        console.log(ideas);
-        res.render('qac/viewIdeaByFaculty', { ideas: ideas, loginName: req.session.email })
+        const page = req.query.page || 1;
+        const perPage = 5;
+        const totalIdeas = await idea.countDocuments({ facultyID: facultyID });
+        const ideas = await idea.find({ facultyID: facultyID })
+            .skip((perPage * page) - perPage)
+            .limit(perPage)
+            .exec();
+        const paginateIdeas = paginate(ideas, totalIdeas, perPage, page);
+        res.render('qac/viewIdeaByFaculty', {
+            ideas: paginateIdeas.docs, currentPage: paginateIdeas.currentPage,
+            hasNextPage: paginateIdeas.hasNextPage, hasPreviousPage: paginateIdeas.hasPreviousPage,
+            nextPage: paginateIdeas.nextPage, previousPage: paginateIdeas.previousPage,
+            totalItems: totalIdeas, totalPages: paginateIdeas.totalPages,
+            loginName: req.session.email
+        });
     }
 }
 
-
-
-
-
-
+const paginate = (items, totalItems, perPage, page) => {
+    const totalPages = Math.ceil(totalItems / perPage);
+    return {
+        totalItems: totalItems,
+        totalPages: totalPages,
+        currentPage: page,
+        hasNextPage: page < totalPages,
+        hasPreviousPage: page > 1,
+        nextPage: page + 1,
+        previousPage: page - 1,
+        itemsPerPage: perPage,
+        docs: items
+    };
+}
 
